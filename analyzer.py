@@ -58,11 +58,13 @@ def analyze_news(input_filename="data/raw_data.json", output_filename="data/anal
             )
             summary_result = response.choices[0].message.content
         elif os.getenv("GEMINI_API_KEY"):
-            import google.generativeai as genai
-            genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-            model = genai.GenerativeModel('gemini-1.5-pro-latest')
+            from google import genai
+            client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
             prompt = f"{system_prompt}\n\n以下是今日收集到的資料：\n{articles_text}"
-            response = model.generate_content(prompt)
+            response = client.models.generate_content(
+                model='gemini-2.5-flash',
+                contents=prompt
+            )
             summary_result = response.text
         elif os.getenv("CLAUDE_API_KEY"):
             import anthropic

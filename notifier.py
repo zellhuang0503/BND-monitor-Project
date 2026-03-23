@@ -17,26 +17,38 @@ def get_summary_text(json_file="data/analyzed_summary.json"):
         data = json.load(f)
     return data.get("summary_markdown", "今日無分析內容。")
 
-def send_line_notify(message):
-    token = os.getenv("LINE_NOTIFY_TOKEN")
-    if not token or token == "your_line_notify_token_here":
-        logger.warning("未設定 LINE_NOTIFY_TOKEN 或是使用預設值，略過 Line 發送。")
+def send_line_message(message):
+    token = os.getenv("LINE_CHANNEL_ACCESS_TOKEN")
+    user_id = os.getenv("LINE_USER_ID")
+    if not token or token == "your_line_channel_access_token_here" or not user_id or user_id == "your_line_user_id_here":
+        logger.warning("未設定 LINE_CHANNEL_ACCESS_TOKEN 或 LINE_USER_ID，略過 Line 發送。")
         return False
 
-    url = "https://notify-api.line.me/api/notify"
-    headers = {"Authorization": f"Bearer {token}"}
-    data = {"message": f"\n{message}"}
+    url = "https://api.line.me/v2/bot/message/push"
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
+    data = {
+        "to": user_id,
+        "messages": [
+            {
+                "type": "text",
+                "text": message
+            }
+        ]
+    }
     
     try:
-        response = requests.post(url, headers=headers, data=data)
+        response = requests.post(url, headers=headers, json=data)
         if response.status_code == 200:
-            logger.info("Line Notify 發送成功!")
+            logger.info("Line 訊息推播成功!")
             return True
         else:
-            logger.error(f"Line Notify 發送失敗! 狀態碼: {response.status_code}")
+            logger.error(f"Line 推播失敗! 狀態碼: {response.status_code}, 內容: {response.text}")
             return False
     except Exception as e:
-        logger.error(f"發送 Line Notify 時發生例外狀況: {e}")
+        logger.error(f"發送 Line 訊息時發生例外狀況: {e}")
         return False
 
 def send_telegram_message(message):
@@ -85,7 +97,7 @@ def push_notifications(report_url=None):
         push_message += "\n\n📂 詳細報告已生成於本機資料夾。"
         
     logger.info("開始推播至通訊軟體...")
-    send_line_notify(push_message)
+    send_line_message(push_message)
     send_telegram_message(push_message)
 
 if __name__ == "__main__":
