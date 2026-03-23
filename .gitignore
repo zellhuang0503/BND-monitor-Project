@@ -3,5 +3,5 @@
 __pycache__/
 *.pyc
 data/
-reports/
+#reports/ (移除忽略，允許報表備份至 GitHub)
 step.jpg

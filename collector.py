@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-def collect_news(query="Boy Next Door BOYNEXTDOOR", max_results=15):
+def collect_news(query="BOYNEXTDOOR KOZ Entertainment K-pop -BTS", max_results=15):
     """
     優先透過 Tavily.ai 搜集新聞，若無金鑰則回退至 DuckDuckGo API。
     為了增加命中率，包含英文縮寫及連著寫的變體。

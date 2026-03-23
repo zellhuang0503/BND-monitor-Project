@@ -33,10 +33,28 @@ def job():
     # 步驟 3: 產生網頁報告
     report_path = generate_report("data/raw_data.json", "data/analyzed_summary.json", "reports")
     
+    # 步驟 3.5: 即時同步至 GitHub 讓網頁生效
+    if report_path:
+        import os
+        filename = os.path.basename(report_path)
+        # 建立一個首頁 (index.html) 來自動跳轉到最新報告，解決 GitHub Pages 根目錄 404 的問題
+        with open("index.html", "w", encoding="utf-8") as f:
+            f.write(f'<html><head><meta http-equiv="refresh" content="0; url=reports/{filename}" /></head><body>Redirecting to latest report...</body></html>')
+            
+        logger.info("正在執行備份腳本以同步網頁報告至 GitHub Pages...")
+        import subprocess
+        # 報告與首頁剛產生，立即呼叫 backup.bat 同步上傳至 Github
+        subprocess.run(["backup.bat"], shell=True)
+
     # 步驟 4: 推播通知
-    # 依賴本機環境，我們將傳遞檔案的絕對/相對路徑
-    abs_report_path = os.path.abspath(report_path) if report_path else None
-    push_notifications(report_url=f"file:///{abs_report_path.replace(chr(92), '/')}" if abs_report_path else None)
+    if report_path:
+        import os
+        filename = os.path.basename(report_path)
+        # 將原本的本機路徑 (file:///) 改為 GitHub Pages 的公開網址
+        github_pages_url = f"https://zellhuang0503.github.io/BND-monitor-Project/reports/{filename}"
+        push_notifications(report_url=github_pages_url)
+    else:
+        push_notifications(report_url=None)
     
     logger.info("=== BND 輿情監測系統：今日任務執行完畢 ===")
 

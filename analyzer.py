@@ -33,11 +33,14 @@ def analyze_news(input_filename="data/raw_data.json", output_filename="data/anal
         articles_text += f"    來源: {item.get('source')} | 日期: {item.get('date')}\n\n"
 
     system_prompt = (
-        "你是一個專業的行銷公關分析師。請根據提供的「Boy Next Door (BND)」相關網路新聞與社群發文的摘要片段，"
+        "你是一個專業的行銷公關分析師。請根據提供的「BOYNEXTDOOR (보이넥스트도어)」相關網路新聞與社群發文的摘要片段，"
         "進行綜合分析。請分析：\n"
         "1. 整體情緒向性（正向、負向或中立）與討論熱度。\n"
         "2. 重大事件或主要討論話題摘要（列點說明）。\n"
         "3. 行銷公關建議（例如是否需要介入或有特定亮點可操作）。\n\n"
+        "【極度重要警告】：本報告僅限分析 KOZ Entertainment 旗下的韓國男團「BOYNEXTDOOR」。\n"
+        "如果提供的資料中混雜了其他團體（如 BTS 防彈少年團、TXT 代言等），請完全忽略那些無關內容！\n"
+        "如果判斷所有資料都與 BOYNEXTDOOR 完全無關，請直接回覆：「今日搜集到的新聞皆與 BOYNEXTDOOR 無關，無分析結果。」，不要硬掰成其他團體的分析。\n\n"
         "請務必以繁體中文回答，並且格式要求結構清晰、容易閱讀。"
     )
 
