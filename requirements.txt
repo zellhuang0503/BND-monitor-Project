@@ -1,0 +1,10 @@
+requests
+duckduckgo-search
+beautifulsoup4
+python-dotenv
+openai
+google-generativeai
+anthropic
+jinja2
+schedule
+tavily-python
