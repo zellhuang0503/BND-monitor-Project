@@ -4,4 +4,4 @@ __pycache__/
 *.pyc
 data/
 #reports/ (移除忽略，允許報表備份至 GitHub)
-step.jpg
+#step.jpg (允許封面圖上傳至 GitHub 以供網頁顯示)
